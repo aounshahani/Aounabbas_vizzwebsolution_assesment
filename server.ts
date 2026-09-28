@@ -17,7 +17,8 @@ const handler = app.getRequestHandler();
 // Import models after app prepare to ensure env is loaded
 async function getModels() {
   const { default: Auction } = await import('./src/models/Auction');
-  return { Auction };
+  const { default: AutoBid } = await import('./src/models/AutoBid');
+  return { Auction, AutoBid };
 }
 
 async function connectDB() {
@@ -36,7 +37,7 @@ async function processAuctionTransitions(
 ) {
   try {
     await connectDB();
-    const { Auction } = await getModels();
+    const { Auction, AutoBid } = await getModels();
     const now = new Date();
 
     // Pending -> Active
@@ -65,6 +66,12 @@ async function processAuctionTransitions(
       auction.status = 'ended';
       auction.winner = auction.currentBidder;
       await auction.save();
+
+      // Deactivate all auto-bids on this auction
+      await AutoBid.updateMany(
+        { auction: auction._id, status: 'active' },
+        { status: 'cancelled' }
+      );
 
       const populated = await auction.populate('winner', 'name email');
       io.to(`auction:${auction._id}`).emit('auction:ended', {

@@ -5,6 +5,7 @@ interface Bid {
   amount: number;
   bidder: { _id: string; name: string } | string;
   createdAt: string;
+  isAutoBid?: boolean;
 }
 
 interface BidHistoryProps {
@@ -32,6 +33,11 @@ export default function BidHistory({ bids }: BidHistoryProps) {
           >
             <div>
               <span className="font-medium">{bidderName}</span>
+              {bid.isAutoBid && (
+                <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-800">
+                  Auto
+                </span>
+              )}
               <span className="text-gray-400 ml-2">
                 {new Date(bid.createdAt).toLocaleTimeString()}
               </span>

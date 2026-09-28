@@ -5,6 +5,7 @@ export interface IBid extends Document {
   auction: Types.ObjectId;
   bidder: Types.ObjectId;
   amount: number;
+  isAutoBid: boolean;
   createdAt: Date;
 }
 
@@ -25,6 +26,10 @@ const BidSchema = new Schema<IBid>(
       type: Number,
       required: [true, 'Bid amount is required'],
       min: [0.01, 'Bid amount must be positive'],
+    },
+    isAutoBid: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

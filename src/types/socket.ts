@@ -6,6 +6,7 @@ export interface ServerToClientEvents {
       amount: number;
       bidder: { _id: string; name: string };
       createdAt: string;
+      isAutoBid?: boolean;
     };
     currentBid: number;
   }) => void;

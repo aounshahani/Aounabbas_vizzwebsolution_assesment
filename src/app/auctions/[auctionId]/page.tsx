@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import CountdownTimer from '@/components/CountdownTimer';
 import BidForm from '@/components/BidForm';
 import BidHistory from '@/components/BidHistory';
+import AutoBidPanel from '@/components/AutoBidPanel';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuction } from '@/hooks/useAuction';
 
@@ -31,6 +32,7 @@ interface BidItem {
   amount: number;
   bidder: { _id: string; name: string };
   createdAt: string;
+  isAutoBid?: boolean;
 }
 
 export default function AuctionRoomPage() {
@@ -180,6 +182,13 @@ export default function AuctionRoomPage() {
 
             <div className="mt-4">
               <BidForm
+                auctionId={auction._id}
+                currentBid={currentBid}
+                isActive={currentStatus === 'active'}
+                isSeller={isSeller}
+                isLoggedIn={!!user}
+              />
+              <AutoBidPanel
                 auctionId={auction._id}
                 currentBid={currentBid}
                 isActive={currentStatus === 'active'}

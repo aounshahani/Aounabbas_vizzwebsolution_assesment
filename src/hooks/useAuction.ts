@@ -8,6 +8,7 @@ interface BidData {
   amount: number;
   bidder: { _id: string; name: string };
   createdAt: string;
+  isAutoBid?: boolean;
 }
 
 interface AuctionState {

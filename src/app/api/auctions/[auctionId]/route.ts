@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import dbConnect from '@/lib/db';
 import Auction from '@/models/Auction';
+import { deactivateAutoBids } from '@/lib/autoBid';
 import {
   successResponse,
   errorResponse,
@@ -42,6 +43,9 @@ export async function GET(
 
     if (updated) {
       await auction.save();
+      if (auction.status === 'ended') {
+        await deactivateAutoBids(auctionId);
+      }
     }
 
     return successResponse(auction);
